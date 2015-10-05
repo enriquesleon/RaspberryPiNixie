@@ -43,7 +43,7 @@ class shift595:
 	def latch(self):
 		GPIO.output(self.latch_pin,True)
 		self.delay()
-		GPIO.outout(self.latch_pin,False)
+		GPIO.output(self.latch_pin,False)
 		self.delay()
 	#loads serial logic value from Serial Pin into register 0 and shifts all following values. overflow outputs to q'
 	def clock(self):
