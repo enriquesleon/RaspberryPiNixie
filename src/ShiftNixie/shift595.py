@@ -56,26 +56,31 @@ class shift595:
 	#sets logic level of Serial Pin and sets one clock cycle to load in value to register 0	
 	def shift(self,value):
 		GPIO.output(self.serial_pin,value)
+		if value > 0:
+			print "High"
+		else:
+			print "Low"
 		self.delay()
 		self.clock()
 	#shifts in the least significant 8 bits of this value. From those 8 bits, the most significant bit is shifted first
 	def shiftValue(self,value):
-		value =  int(value)
 		Msb = 0x80
 		for x in range(8):
 			self.shift((value<<x)&Msb)
-	def shiftAll(*values):
-		shiftCount = self.num_register
-		if len(values) < self.num_register:
-			shiftCount = len(values)
-		for x in range(shiftCount):
-			shiftValue(values[x])
-			self.register_values.append(values[x])
+	def shiftAndLatchAll(self,*values):
+		for x in values:
+			self.shiftValue(x)
+		self.latch()
+	def cleanUp(self):
+		GPIO.cleanup()
+def debugShift():
+	shift = shift595(PIN_SERIAL,PIN_ENABLE,PIN_LATCH,PIN_CLK,PIN_CLR,2)
+	return shift
 
 def main():
-	shift = shift595(PIN_SERIAL,PIN_ENABLE,PIN_LATCH,PIN_CLK,PIN_CLR)
-	shift.shiftValue(0xFF)
-	shift.shiftValue(0xFF)
+	shift = shift595(PIN_SERIAL,PIN_ENABLE,PIN_LATCH,PIN_CLK,PIN_CLR,2)
+	shift.shiftValue(0)
+	shift.shiftValue(255)
 	shift.latch()
 	GPIO.cleanup()
 if __name__ == '__main__':
