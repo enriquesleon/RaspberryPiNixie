@@ -11,12 +11,14 @@ PIN_CLK    = 35
 PIN_CLR    = 37
 DELAY      = .010
 class shift595:
-	def __init__(self,serial,enable,latch,clock,clear):
+	def __init__(self,serial,enable,latch,clock,clear,num_register):
 		self.serial_pin = serial
 		self.enable_pin = enable
 		self.latch_pin = latch
 		self.clock_pin = clock
-		self.clear_pin = clear		
+		self.clear_pin = clear
+		self.num_register = num_register
+		self.register_values = []		
 		#set up output for board Raspberry Pi board pin layout
 		GPIO.setmode(GPIO.BOARD)
 
@@ -52,18 +54,28 @@ class shift595:
 		GPIO.output(self.clock_pin,False)
 		self.delay()
 	#sets logic level of Serial Pin and sets one clock cycle to load in value to register 0	
-	def shiftIn(self,value):
+	def shift(self,value):
 		GPIO.output(self.serial_pin,value)
 		self.delay()
 		self.clock()
 	#shifts in the least significant 8 bits of this value. From those 8 bits, the most significant bit is shifted first
 	def shiftValue(self,value):
+		value =  int(value)
 		Msb = 0x80
 		for x in range(8):
-			self.shiftIn((value<<x)&Msb)
+			self.shift((value<<x)&Msb)
+	def shiftAll(*values):
+		shiftCount = self.num_register
+		if len(values) < self.num_register:
+			shiftCount = len(values)
+		for x in range(shiftCount):
+			shiftValue(values[x])
+			self.register_values.append(values[x])
+
 def main():
 	shift = shift595(PIN_SERIAL,PIN_ENABLE,PIN_LATCH,PIN_CLK,PIN_CLR)
-	shift.shiftValue(255)
+	shift.shiftValue(0xFF)
+	shift.shiftValue(0xFF)
 	shift.latch()
 	GPIO.cleanup()
 if __name__ == '__main__':
