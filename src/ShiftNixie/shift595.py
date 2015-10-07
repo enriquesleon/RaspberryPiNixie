@@ -4,21 +4,22 @@
 #Major Thanks to www.smbaker.com for his great shift register example
 import RPi.GPIO as GPIO
 import time
+from   collections import deque
 PIN_SERIAL = 29
 PIN_ENABLE = 31
 PIN_LATCH  = 33
 PIN_CLK    = 35
 PIN_CLR    = 37
-DELAY      = .010
+DELAY      = .005
 class shift595:
-	def __init__(self,serial,enable,latch,clock,clear,num_register):
+	def __init__(self,serial,enable,latch,clock,clear,number_registers = 1):
 		self.serial_pin = serial
 		self.enable_pin = enable
 		self.latch_pin = latch
 		self.clock_pin = clock
 		self.clear_pin = clear
-		self.num_register = num_register
-		self.register_values = []		
+		self.number_registers = number_registers
+		self.register_values = deque([0 for x in range(number_registers)],number_registers)
 		#set up output for board Raspberry Pi board pin layout
 		GPIO.setmode(GPIO.BOARD)
 
@@ -54,27 +55,27 @@ class shift595:
 		GPIO.output(self.clock_pin,False)
 		self.delay()
 	#sets logic level of Serial Pin and sets one clock cycle to load in value to register 0	
-	def shift(self,value):
+	def shiftBit(self,value):
 		GPIO.output(self.serial_pin,value)
-		if value > 0:
-			print "High"
-		else:
-			print "Low"
 		self.delay()
 		self.clock()
 	#shifts in the least significant 8 bits of this value. From those 8 bits, the most significant bit is shifted first
 	def shiftValue(self,value):
 		Msb = 0x80
+		self.register_values.appendleft(value&0xFF)
+		print "{0:08b}".format(value&0xFF)
 		for x in range(8):
-			self.shift((value<<x)&Msb)
-	def shiftAndLatchAll(self,*values):
+			self.shiftBit((value<<x)&Msb)
+	def shiftAndLatchAll(self,values = [0]):
 		for x in values:
 			self.shiftValue(x)
 		self.latch()
+	def currentValues(self):
+		return self.register_values
 	def cleanUp(self):
 		GPIO.cleanup()
-def debugShift():
-	shift = shift595(PIN_SERIAL,PIN_ENABLE,PIN_LATCH,PIN_CLK,PIN_CLR,2)
+def debugShift(number_registers):
+	shift = shift595(PIN_SERIAL,PIN_ENABLE,PIN_LATCH,PIN_CLK,PIN_CLR,number_registers)
 	return shift
 
 def main():
@@ -82,6 +83,8 @@ def main():
 	shift.shiftValue(0)
 	shift.shiftValue(255)
 	shift.latch()
+	for x in shift.register_values:
+		print "{0:08b}".format(x)
 	GPIO.cleanup()
 if __name__ == '__main__':
 	main()
