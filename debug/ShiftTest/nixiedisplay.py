@@ -7,6 +7,7 @@
 import shift595
 import time
 import math
+#import RPi.GPIO as GPIO
 PIN_SERIAL = 29
 PIN_ENABLE = 31
 PIN_LATCH  = 33
@@ -67,7 +68,9 @@ class NixieDisplay:
 			output_string = output_string[:self.number_Displays]
 		digits = [digit for digit in output_string]
 		for digit in digits:
+			print digit
 			self.nixie_tubes[digits.index(digit)].set_value(int(digit))
+
 
 
 
