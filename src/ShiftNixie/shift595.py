@@ -63,7 +63,6 @@ class shift595:
 	def shift_Value(self,value):
 		Msb = 0x80
 		self.register_values.appendleft(value&0xFF)
-		print "{0:08b}".format(value&0xFF)
 		for x in range(8):
 			self.shift_Bit((value<<x)&Msb)
 	def shift_All(self,values = [0]):
