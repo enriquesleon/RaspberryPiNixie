@@ -7,7 +7,7 @@
 import shift595
 import time
 import math
-#import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 PIN_SERIAL = 29
 PIN_ENABLE = 31
 PIN_LATCH  = 33
