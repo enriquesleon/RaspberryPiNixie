@@ -2,6 +2,36 @@
 
 
 #Major Thanks to www.smbaker.com for his great shift register example
+
+#	
+#
+#     16 15 14 13 12 11 10 09
+#	|--|--|--|--|--|--|--|--|--|
+#	|					       |
+#	|		SN74HC595		   |
+#	|						   |
+#	|--|--|--|--|--|--|--|--|--|
+#	  01 02 03 04 05 06 07 08
+#
+#
+#
+#	01	Output 1
+#	02	Output 2
+#	03	Output 3
+#	04	Output 4
+#	05  Output 5
+#	06	Output 6
+#	07	Output 7
+#	08 	Ground
+#	09	Overflow
+#	10	CLR'
+#	11	Serial Clock
+#	12	Latch Clock
+#	13	Output Enable'
+#	14	Serial Input
+#	15	Output 0
+#	16	VCC
+
 import RPi.GPIO as GPIO
 import time
 from   collections import deque
