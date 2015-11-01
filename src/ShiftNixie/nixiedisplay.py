@@ -4,7 +4,7 @@
 #with an array of integers that the tube will display. If the value is out of range, the value will
 #default to zero in order to avoid blanking the tubes and damaging them. The left most
 #value in the array will be shifted first.
-import shift595
+import shift595 as shift
 import time
 import math
 import RPi.GPIO as GPIO
@@ -29,7 +29,7 @@ class NixieDisplay:
 				n_value = 9
 			self.half_Byte_Value = n_value
 
-	def __init__(self,number_Displays):
+	def __init__(self,number_Displays,shift):
 		self.number_Displays = number_Displays
 		self.number_Registers = int(math.ceil(self.number_Displays/2))
 		
@@ -39,7 +39,7 @@ class NixieDisplay:
 			self.half_Bytes = self.number_Displays
 
 		self.nixie_tubes = [self.NixieTube() for i in range(self.half_Bytes)]
-		self.shift = shift595.Shift595(PIN_SERIAL,PIN_ENABLE,PIN_LATCH,PIN_CLK,PIN_CLR,self.number_Registers)
+		self.shift = shift
 		self.currentValues = self.shift.register_values
 		self.span = [i*2 for i in range(self.half_Bytes//2)]
 	
@@ -82,7 +82,8 @@ class NixieDisplay:
 		for i in range(len(output_string)):
 			self.set_display(i,digits[i])
 def main():
-	display = NixieDisplay(6)
+	shift = shift.Shift595(PIN_SERIAL,PIN_ENABLE,PIN_LATCH,PIN_CLK,PIN_CLR,3)
+	display = NixieDisplay(6,shift)
 	while True:
 		d_string = raw_input()
 		display.string_display(d_string)
