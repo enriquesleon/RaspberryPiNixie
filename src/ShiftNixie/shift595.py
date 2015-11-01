@@ -41,7 +41,7 @@ PIN_LATCH  = 33
 PIN_CLK    = 35
 PIN_CLR    = 37
 DELAY      = .010
-class shift595:
+class Shift595:
 	def __init__(self,serial,enable,latch,clock,clear,number_registers = 1):
 		self.serial_pin = serial
 		self.enable_pin = enable
@@ -95,6 +95,8 @@ class shift595:
 		self.register_values.appendleft(value&0xFF)
 		for x in range(8):
 			self.shift_Bit((value<<x)&Msb)
+			print "{0:08b} {1}".format(value&0xFF,int(value))
+
 	def shift_All(self,values = [0]):
 		for x in values:
 			self.shift_Value(x)

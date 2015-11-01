@@ -4,7 +4,7 @@
 #with an array of integers that the tube will display. If the value is out of range, the value will
 #default to zero in order to avoid blanking the tubes and damaging them. The left most
 #value in the array will be shifted first.
-import shift595 as shift
+import shift595
 import time
 import math
 import RPi.GPIO as GPIO
@@ -82,7 +82,7 @@ class NixieDisplay:
 		for i in range(len(output_string)):
 			self.set_display(i,digits[i])
 def main():
-	shift = shift.Shift595(PIN_SERIAL,PIN_ENABLE,PIN_LATCH,PIN_CLK,PIN_CLR,3)
+	shift = shift595.Shift595(PIN_SERIAL,PIN_ENABLE,PIN_LATCH,PIN_CLK,PIN_CLR,3)
 	display = NixieDisplay(6,shift)
 	while True:
 		d_string = raw_input()
