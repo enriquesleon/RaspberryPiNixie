@@ -6,31 +6,31 @@
 #	
 #
 #     16 15 14 13 12 11 10 09
-#	|--|--|--|--|--|--|--|--|--|
-#	|					       |
-#	|		SN74HC595		   |
-#	|						   |
-#	|--|--|--|--|--|--|--|--|--|
-#	  01 02 03 04 05 06 07 08
+#   |--|--|--|--|--|--|--|--|--|
+#   |                          |
+#   |         SN74HC595        |
+#   |                          |
+#   |--|--|--|--|--|--|--|--|--|
+#     01 02 03 04 05 06 07 08
 #
 #
 #
-#	01	Output 1
-#	02	Output 2
-#	03	Output 3
-#	04	Output 4
-#	05  Output 5
-#	06	Output 6
-#	07	Output 7
-#	08 	Ground
-#	09	Overflow
-#	10	CLR'
-#	11	Serial Clock
-#	12	Latch Clock
-#	13	Output Enable'
-#	14	Serial Input
-#	15	Output 0
-#	16	VCC
+#   01	Output 1
+#   02	Output 2
+#   03	Output 3
+#   04	Output 4
+#   05  Output 5
+#   06	Output 6
+#   07	Output 7
+#   08 	Ground
+#   09	Overflow
+#   10	CLR'
+#   11	Serial Clock
+#   12	Latch Clock
+#   13	Output Enable'
+#   14	Serial Input
+#   15	Output 0
+#   16	VCC
 
 import RPi.GPIO as GPIO
 import time
@@ -40,9 +40,9 @@ PIN_ENABLE = 31
 PIN_LATCH  = 33
 PIN_CLK    = 35
 PIN_CLR    = 37
-DELAY      = .010
+DELAY      = .0025
 class Shift595:
-	def __init__(self,serial,enable,latch,clock,clear,number_registers = 1):
+	def __init__(self,serial = PIN_SERIAL,enable = PIN_ENABLE,latch = PIN_LATCH,clock = PIN_CLK,clear = PIN_CLR,number_registers = 3):
 		self.serial_pin = serial
 		self.enable_pin = enable
 		self.latch_pin = latch
@@ -70,10 +70,12 @@ class Shift595:
 		GPIO.output(self.clear_pin,True)
 	#Delay to aid in propagation
 	def delay(self):
+		"This function adds a small delay to allow proper propagation"
 		time.sleep(DELAY)
 
 	#move values from shift registers into output registers
 	def latch(self):
+		"Latches in Values to the output registers"
 		GPIO.output(self.latch_pin,True)
 		self.delay()
 		GPIO.output(self.latch_pin,False)
@@ -111,7 +113,7 @@ def debug_Shift(number_registers):
 	return shift
 
 def main():
-	shift = shift595(PIN_SERIAL,PIN_ENABLE,PIN_LATCH,PIN_CLK,PIN_CLR,3)
+	shift = shift595()
 	#test pattern for nixie tube of 0 1 2 3 4 5
 	shift.shift_All([1,35,69])
 	GPIO.cleanup()

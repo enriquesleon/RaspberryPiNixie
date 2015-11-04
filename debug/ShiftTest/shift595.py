@@ -39,9 +39,9 @@ PIN_ENABLE = 31
 PIN_LATCH  = 33
 PIN_CLK    = 35
 PIN_CLR    = 37
-DELAY      = .005
+DELAY      = .0025
 class Shift595:
-	def __init__(self,serial,enable,latch,clock,clear,number_registers = 1):
+	def __init__(self,serial = PIN_SERIAL,enable = PIN_ENABLE,latch = PIN_LATCH,clock = PIN_CLK,clear = PIN_CLR,number_registers = 3):
 		self.serial_pin = serial
 		self.enable_pin = enable
 		self.latch_pin = latch
