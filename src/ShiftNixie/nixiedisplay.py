@@ -45,11 +45,11 @@ class NixieDisplay:
 		self.span = [i*2 for i in range(self.half_Bytes//2)]
 	
 	def update(self):
-		"Call this method anytime you wish to update the values on the display from the loaded string"
-		 grouped_Values = [[self.get_display_value(j),self.get_display_value(j+1)] for j in self.span]
-		 print "Grouped Register Values: {}".format(grouped_Values)
-		 combined_Values = [self.__combine_To_Register(values) for values in grouped_Values]
-		 self.shift.shift_All(combined_Values)
+		"""Call this method anytime you wish to update the values on the display from the loaded string"""
+		grouped_Values = [[self.get_display_value(j),self.get_display_value(j+1)] for j in self.span]
+		print "Grouped Register Values: {}".format(grouped_Values)
+		combined_Values = [self.__combine_To_Register(values) for values in grouped_Values]
+		self.shift.shift_All(combined_Values)
 
 	def __combine_To_Register(self,display_Value = [0,0]):
 		"Private method. Don't touch. Combines two hex values into a number that can be loaded into a register"
