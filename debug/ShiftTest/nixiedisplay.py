@@ -62,14 +62,17 @@ class NixieDisplay:
 	def clear_display(self):
 		for tube in self.nixie_tubes:
 			tube.set_value(0x0)
+			
 	def set_display(self,index,value):
-		try:
-			self.nixie_tubes[index].set_value(int(value))
-		except ValueError:
-			print "Invalid Type Input for {}".format(value)
-			self.nixie_tubes[index].set_value(0x0)	
+		if value.isdigit():
+			self.nixie_tubes[index].set_value(value)
+			return true
+		else:
+			return false	
+
 	def get_display_value(self,index):
 		return self.nixie_tubes[index].current_value()
+
 	def blink(self,times = 0,time = 0 ,delay = 10000):
 		pass	
 	

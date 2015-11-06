@@ -68,10 +68,11 @@ class NixieDisplay:
 			tube.set_value(0x0)
 	def set_display(self,index,value):
 		'''Set a particular tube to the given value. Display remains unchanged if string cannot be cast into an int'''
-		try:
-			self.nixie_tubes[index].set_value(int(value))
-		except ValueError as ve:
-			print "Invalid Type Input for {}".format(value)
+		if value.isdigit():
+			self.nixie_tubes[index].set_value(value)
+			return true
+		else:
+			return false
 	def get_display_value(self,index):
 		return self.nixie_tubes[index].current_value()
 	def blink(self,times = 0,time = 0 ,delay = 10000):
