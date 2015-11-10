@@ -6,3 +6,13 @@ An over view of the K1551 chip can be found here:
 http://neonixie.com/ic/english-datasheet-1.jpg
 
 http://neonixie.com/ic/english-datasheet-2.jpg
+
+Usage:
+
+import nixiedisplay
+import shift595
+
+shift = shift595.Shift595()
+display = nixiedisplay.NixieDisplay(6,shift)
+display.string_display("123456")
+display.update()
