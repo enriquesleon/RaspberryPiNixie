@@ -7,7 +7,6 @@
 import shift595
 import time
 import math
-#import RPi.GPIO as GPIO
 PIN_SERIAL = 29
 PIN_ENABLE = 31
 PIN_LATCH  = 33
@@ -30,6 +29,7 @@ class NixieDisplay:
 			self.half_Byte_Value = n_value
 
 	def __init__(self,number_Displays,shift):
+		"Class Requires an instance of the Shift595 class in order to operate on the shift registers"
 		self.number_Displays = number_Displays
 		self.number_Registers = int(math.ceil(self.number_Displays/2))
 		
@@ -44,12 +44,14 @@ class NixieDisplay:
 		self.span = [i*2 for i in range(self.half_Bytes//2)]
 	
 	def update(self):
-		 grouped_Values = [[self.get_display_value(j),self.get_display_value(j+1)] for j in self.span]
-		 print "Grouped Register Values: {}".format(grouped_Values)
-		 combined_Values = [self._combine_To_Register(values) for values in grouped_Values]
-		 self.shift.shift_All(combined_Values)
+		"""Call this method anytime you wish to update the values on the display from the loaded string"""
+		grouped_Values = [[self.get_display_value(j),self.get_display_value(j+1)] for j in self.span]
+		print "Grouped Register Values: {}".format(grouped_Values)
+		combined_Values = [self.__combine_To_Register(values) for values in grouped_Values]
+		self.shift.shift_All(combined_Values)
 
-	def _combine_To_Register(self,display_Value = [0,0]):
+	def __combine_To_Register(self,display_Value = [0,0]):
+		"Private method. Don't touch. Combines two hex values into a number that can be loaded into a register"
 		most_SigReg_HByte  = display_Value[0]&LSByte
 		least_SigReg_HByte = display_Value[1]&LSByte
 		most_SigReg_HByte  = most_SigReg_HByte << 4
@@ -60,23 +62,25 @@ class NixieDisplay:
 		return registerValue
 	
 	def clear_display(self):
+		"Sets all values in the display to zero"
 		for tube in self.nixie_tubes:
 			tube.set_value(0x0)
-			
 	def set_display(self,index,value):
+		'''Set a particular tube to the given value. Display remains unchanged if string cannot be cast into an int'''
 		if value.isdigit():
-			self.nixie_tubes[index].set_value(value)
-			return true
+			self.nixie_tubes[index].set_value(int(value))
+			return True
 		else:
-			return false	
-
+			return False
 	def get_display_value(self,index):
 		return self.nixie_tubes[index].current_value()
-
 	def blink(self,times = 0,time = 0 ,delay = 10000):
 		pass	
 	
 	def string_display(self,output_string):
+		"""Pass in a number string to display on the nixie display. If the string length is less than the number of tubes,
+		the rest of the display will display zero. If the string is to long, only the length of number of of displays numbers will be shown.
+		"""
 		if len(output_string) > self.number_Displays:
 			output_string = output_string[:self.number_Displays]
 		if len(output_string) < self.number_Displays:
@@ -85,7 +89,8 @@ class NixieDisplay:
 		for i in range(len(output_string)):
 			self.set_display(i,digits[i])
 def main():
-	display = NixieDisplay(6,shift595.Shift595())
+	shift = shift595.Shift595()
+	display = NixieDisplay(6,shift)
 	while True:
 		d_string = raw_input()
 		display.string_display(d_string)
