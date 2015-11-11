@@ -1,7 +1,6 @@
 #!/usr/bin/python
 import urllib2
 import json
-import collections
 
 # Utilize SportsRadar API to grab live NFL score data
 # Prompts user twice, first to get week number, and second
