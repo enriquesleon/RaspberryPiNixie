@@ -64,6 +64,10 @@ def get_scores():
 # Main program
 # Todo: after getting scores from the get_score function as a tuple,
 # pass those values onto be displayed on the tubes
-home_score, away_score = get_scores()
-print "Home: %d - Away: %d" % (home_score, away_score)
+def get_game_scores():
+    home_score, away_score = get_scores()
+    #bridge_scores = "Home: %d - Away: %d" % (home_score, away_score)
+    bridge_scores = "0%d0%d" % (home_score, away_score)
+    print bridge_scores
+    return bridge_scores
 

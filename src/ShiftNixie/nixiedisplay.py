@@ -8,6 +8,7 @@ import shift595
 import time
 import math
 import RPi.GPIO as GPIO
+import nixiegame
 PIN_SERIAL = 29
 PIN_ENABLE = 31
 PIN_LATCH  = 33
@@ -93,13 +94,8 @@ def main():
 	shift = shift595.Shift595()
 	display = NixieDisplay(6,shift)
 	while True:
-		d_string = raw_input()
+		d_string = nixiegame.get_game_scores()
 		display.string_display(d_string)
 		display.update()
 if __name__ == '__main__':
 	main()
-
-
-
-
-	
