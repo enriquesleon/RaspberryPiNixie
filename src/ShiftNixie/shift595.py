@@ -40,7 +40,7 @@ PIN_ENABLE = 31
 PIN_LATCH  = 33
 PIN_CLK    = 35
 PIN_CLR    = 37
-DELAY      = .001
+DELAY      = .05
 class Shift595:
 	def __init__(self,serial = PIN_SERIAL,enable = PIN_ENABLE,latch = PIN_LATCH,clock = PIN_CLK,clear = PIN_CLR,number_registers = 3):
 		self.serial_pin = serial
@@ -109,11 +109,11 @@ class Shift595:
 	def clean_Up(self):
 		GPIO.cleanup()
 def debug_Shift(number_registers):
-	shift = shift595(PIN_SERIAL,PIN_ENABLE,PIN_LATCH,PIN_CLK,PIN_CLR,number_registers)
+	shift = Shift595()
 	return shift
 
 def main():
-	shift = shift595()
+	shift = Shift595()
 	#test pattern for nixie tube of 0 1 2 3 4 5
 	shift.shift_All([1,35,69])
 	GPIO.cleanup()
