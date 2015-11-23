@@ -5,6 +5,9 @@ import urllib2
 import json
 import time
 
+shift = shift595.Shift595()
+display = nixiedisplay.NixieDisplay(6,shift)
+
 def select_game():
     # print out weeks for user prompt
     print "Select a week:"
@@ -51,13 +54,11 @@ def select_game():
 # Utilize SportsRadar API to grab live NFL score data
 # Prompts user twice, first to get week number, and second
 # to select game. Returns home score and away score as a tuple
-def display_scores(game_id):
+def get_scores(game_id):
     # build and call API to get score data for selected game
     game_url = "http://api.sportradar.us/nfl-ot1/games/" + game_id + "/statistics.json?api_key=sjs8f4b2uj34ea39cmhjcu44"
-    shift = shift595.Shift595()
-    display = nixiedisplay.NixieDisplay(6,shift)
-
-    while True:
+    prompt = "Press 'h' to display home score, 'a' to display away score, or just hit enter to refresh the scores"
+    while (True):
         game_request = urllib2.urlopen(game_url).read()
         game_data = json.loads(game_request)
 
@@ -69,18 +70,43 @@ def display_scores(game_id):
             home_score = 0
             away_score = 0
 
-        
-        bridge_scores = "%d00%d" % (home_score, away_score)
-        display.string_display(bridge_scores)
-        display.update()
-        time.sleep(5)
+        home_score_formatted = "%02d" % (home_score)
+        away_score_formatted = "%02d" % (away_score)
+        #bridge_scores = "%02d00%02d" % (home_score, away_score)
+        #print bridge_scores
+        print home_score_formatted
+        print away_score_formatted
+
+        # Display scores
+        print_scores(home_score_formatted)
+        time.sleep(2)
+        print_scores(away_score_formatted)
+
+        print prompt
+        hold = raw_input()
+        score_loop = True
+        while (score_loop):        
+            if (hold == 'h'):
+                print_scores(home_score_formatted)
+                print prompt
+                hold = raw_input()
+            elif (hold == 'a'):
+                print_scores(away_score_formatted)
+                print prompt
+                hold = raw_input()
+            else:
+                score_loop = False
+
+def print_scores(score):
+    display.string_display(score)
+    display.update()
 
 # Main program
 # Todo: after getting scores from the get_score function as a tuple,
 # pass those values onto be displayed on the tubes
 def main():
     game = select_game()
-    display_scores(game)
+    get_scores(game)
 
 if __name__ == '__main__':
     main()
