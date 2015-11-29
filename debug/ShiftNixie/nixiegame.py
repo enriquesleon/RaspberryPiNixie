@@ -5,8 +5,7 @@ import urllib2
 import json
 import time
 
-shift = shift595.Shift595()
-display = nixiedisplay.NixieDisplay(4,shift)
+display = nixiedisplay.NixieDisplay(4,shift595.Shift595())
 
 def select_game():
     # print out weeks for user prompt
