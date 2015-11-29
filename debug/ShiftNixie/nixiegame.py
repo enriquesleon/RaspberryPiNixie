@@ -6,7 +6,7 @@ import json
 import time
 
 shift = shift595.Shift595()
-display = nixiedisplay.NixieDisplay(6,shift)
+display = nixiedisplay.NixieDisplay(4,shift)
 
 def select_game():
     # print out weeks for user prompt
@@ -57,7 +57,8 @@ def select_game():
 def get_scores(game_id):
     # build and call API to get score data for selected game
     game_url = "http://api.sportradar.us/nfl-ot1/games/" + game_id + "/statistics.json?api_key=sjs8f4b2uj34ea39cmhjcu44"
-    prompt = "Press 'h' to display home score, 'a' to display away score, or just hit enter to refresh the scores"
+    #prompt = "Press 'h' to display home score, 'a' to display away score, or just hit enter to refresh the scores"
+    prompt = "Press enter to refresh scores"
     while (True):
         game_request = urllib2.urlopen(game_url).read()
         game_data = json.loads(game_request)
@@ -70,20 +71,22 @@ def get_scores(game_id):
             home_score = 0
             away_score = 0
 
-        home_score_formatted = "%02d" % (home_score)
-        away_score_formatted = "%02d" % (away_score)
-        #bridge_scores = "%02d00%02d" % (home_score, away_score)
-        #print bridge_scores
-        print home_score_formatted
-        print away_score_formatted
+        #home_score_formatted = "%02d" % (home_score)
+        #away_score_formatted = "%02d" % (away_score)
+        bridge_scores = "%02d%02d" % (home_score, away_score)
+        print bridge_scores
+        #print home_score_formatted
+        #print away_score_formatted
 
         # Display scores
-        print_scores(home_score_formatted)
-        time.sleep(2)
-        print_scores(away_score_formatted)
+        print_scores(bridge_scores)
+        #print_scores(home_score_formatted)
+        #time.sleep(2)
+        #print_scores(away_score_formatted)
 
         print prompt
         hold = raw_input()
+'''
         score_loop = True
         while (score_loop):        
             if (hold == 'h'):
@@ -96,6 +99,7 @@ def get_scores(game_id):
                 hold = raw_input()
             else:
                 score_loop = False
+'''
 
 def print_scores(score):
     display.string_display(score)
